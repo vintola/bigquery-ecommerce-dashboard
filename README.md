@@ -63,8 +63,9 @@ date, so the sample stays stable.
 
 ## Local setup
 
-Python 3.13 is recommended (Community Cloud support is reliable; 3.14 is not
-guaranteed).
+Python 3.13 or 3.14 works. Community Cloud currently defaults to 3.14, so
+`pyarrow>=22` is required for a prebuilt wheel (21 tries to compile from source
+and needs cmake).
 
 ```bash
 cd ~/Projects/bigquery-ecommerce-dashboard
