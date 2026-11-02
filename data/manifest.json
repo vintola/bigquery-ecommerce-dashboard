@@ -1,0 +1,71 @@
+{
+  "source": "bigquery-public-data.thelook_ecommerce",
+  "project": "thelook-dashboard-av-258e9c",
+  "extracted_at": "2026-11-02T04:43:37+00:00",
+  "max_bytes_billed": 214748364800,
+  "notes": [
+    "Public synthetic dataset published by Google Cloud.",
+    "Revenue is SUM(order_items.sale_price), excluding Cancelled line items.",
+    "COGS uses products.cost; gross profit is revenue minus COGS.",
+    "Returns are identified by a non-null order_items.returned_at.",
+    "The incomplete current month is excluded so trends end on a complete period."
+  ],
+  "files": {
+    "category_monthly": {
+      "sql": "category_monthly.sql",
+      "rows": 3241,
+      "bytes": 108306,
+      "query_seconds": 2.2,
+      "bytes_processed": 10230756
+    },
+    "cohort_retention": {
+      "sql": "cohort_retention.sql",
+      "rows": 1043,
+      "bytes": 14885,
+      "query_seconds": 1.4,
+      "bytes_processed": 7635777
+    },
+    "customer_orders": {
+      "sql": "customer_orders.sql",
+      "rows": 4,
+      "bytes": 2954,
+      "query_seconds": 1.5,
+      "bytes_processed": 7635777
+    },
+    "inventory_risk": {
+      "sql": "inventory_risk.sql",
+      "rows": 26,
+      "bytes": 5816,
+      "query_seconds": 1.4,
+      "bytes_processed": 0
+    },
+    "monthly_customer_mix": {
+      "sql": "monthly_customer_mix.sql",
+      "rows": 94,
+      "bytes": 4058,
+      "query_seconds": 1.4,
+      "bytes_processed": 6189809
+    },
+    "monthly_kpis": {
+      "sql": "monthly_kpis.sql",
+      "rows": 94,
+      "bytes": 13236,
+      "query_seconds": 1.9,
+      "bytes_processed": 9691977
+    },
+    "product_monthly": {
+      "sql": "product_monthly.sql",
+      "rows": 3648,
+      "bytes": 89342,
+      "query_seconds": 2.9,
+      "bytes_processed": 10843024
+    },
+    "traffic_sources": {
+      "sql": "traffic_sources.sql",
+      "rows": 5,
+      "bytes": 4205,
+      "query_seconds": 2.0,
+      "bytes_processed": 9261475
+    }
+  }
+}

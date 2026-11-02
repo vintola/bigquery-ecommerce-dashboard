@@ -1,0 +1,12 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Local secrets (never needed by the app itself)
+.streamlit/secrets.toml
+.env
+
+# OS / editor
+.DS_Store
+*.log
