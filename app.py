@@ -9,7 +9,7 @@ st.set_page_config(
     page_title="TheLook eCommerce — Retail performance dashboard",
     page_icon="https://alvintola.com/favicon.svg",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="auto",
 )
 st.markdown(theme.CSS, unsafe_allow_html=True)
 
