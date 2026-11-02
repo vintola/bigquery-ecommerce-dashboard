@@ -1,0 +1,48 @@
+# Copy this file to .github/workflows/refresh.yml to enable scheduled refreshes.
+# Keeping it here avoids needing the `workflow` scope to push the repository.
+name: Refresh BigQuery extracts
+
+# Optional: keeps data/*.parquet fresh from BigQuery. Requires two repository
+# secrets: GCP_PROJECT_ID and GCP_SA_KEY (a service-account JSON key with
+# roles/bigquery.jobUser and roles/bigquery.dataViewer).
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 3 * * 1"
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Install pipeline dependencies
+        run: pip install -r pipeline/requirements.txt
+
+      - name: Extract
+        env:
+          GOOGLE_CLOUD_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
+        run: python pipeline/extract.py
+
+      - name: Commit refreshed extracts
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data
+          if git diff --staged --quiet; then
+            echo "No data changes."
+          else
+            git commit -m "Refresh BigQuery extracts"
+            git push
+          fi

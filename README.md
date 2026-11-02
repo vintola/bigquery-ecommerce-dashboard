@@ -114,9 +114,12 @@ the sandbox quota.
 ### 3. Refresh
 
 - **Manual:** rerun `pipeline/extract.py` and commit `data/`.
-- **Scheduled:** add repository secrets `GCP_PROJECT_ID` and `GCP_SA_KEY`
-  (service-account JSON with `roles/bigquery.jobUser` and
-  `roles/bigquery.dataViewer`) and the weekly Action refreshes the extracts.
+- **Scheduled:** copy `pipeline/refresh-workflow.yml` to
+  `.github/workflows/refresh.yml`, then add repository secrets `GCP_PROJECT_ID`
+  and `GCP_SA_KEY` (service-account JSON with `roles/bigquery.jobUser` and
+  `roles/bigquery.dataViewer`). The weekly Action then refreshes the extracts.
+  The template is kept out of the workflow path because pushing a workflow file
+  needs the `workflow` GitHub token scope.
 
 The action is optional; the dataset is historical, so a manual refresh is
 enough for a portfolio sample.
