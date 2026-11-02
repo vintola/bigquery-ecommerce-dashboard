@@ -19,7 +19,14 @@ bigquery-public-data.thelook_ecommerce
 pipeline/extract.py  ──►  data/*.parquet + manifest.json  ──►  app.py
         ▲                                                         │
         │  weekly (optional)                                       ▼
-.github/workflows/refresh.yml                              share.streamlit.io
+pipeline/refresh-workflow.yml                             share.streamlit.io
+                                                                  │
+                                                                  │ raw app path /~/+/
+                                                                  ▼
+                                                    Cloudflare Worker (dashboard.alvintola.com)
+                                                                  │
+                                                                  ▼
+                                                         https://dashboard.alvintola.com/
 ```
 
 BigQuery credentials are needed only by `pipeline/extract.py`. The Streamlit
@@ -130,10 +137,27 @@ enough for a portfolio sample.
    read-only deploy key).
 2. Go to <https://share.streamlit.io> → **Create app** → select the repo,
    branch `main`, main file `app.py`.
-3. Deploy. No secrets are required because the app reads `data/*.parquet`.
-4. Copy the app URL (for example
-   `https://vintola-bigquery-ecommerce-dashboard.streamlit.app`) and add it to
-   the portfolio case study.
+3. Set the app subdomain to **`alvintola-retail-dashboard`**.
+4. Deploy. No secrets are required because the app reads `data/*.parquet`.
+
+The app is then available at
+`https://alvintola-retail-dashboard.streamlit.app`.
+
+## Custom domain on Cloudflare
+
+Streamlit routes by the `Host` header, so a CNAME to `*.streamlit.app` returns
+404. `cloudflare-worker/` is a small reverse proxy that fetches the raw app
+path (`/~/+/`) by its real hostname and serves it on
+`https://dashboard.alvintola.com/`.
+
+```bash
+cd cloudflare-worker
+npx --yes wrangler@latest deploy
+```
+
+The Worker config sets `APP_ORIGIN` and a `dashboard.alvintola.com` custom
+domain. If the Streamlit subdomain changes, update `APP_ORIGIN` in
+`cloudflare-worker/wrangler.jsonc` and redeploy.
 
 ## Repo layout
 
@@ -143,10 +167,11 @@ dashboard/data.py          loading, filtering, aggregation, KPI definitions
 dashboard/charts.py        Plotly figures
 dashboard/theme.py         palette, CSS, formatting
 pipeline/extract.py        BigQuery → Parquet
+pipeline/refresh-workflow.yml  copy to .github/workflows/ to schedule refreshes
 sql/*.sql                  one query per extract
 data/*.parquet             published extracts (committed)
 data/manifest.json         refresh timestamp, rows, bytes scanned
-.github/workflows/refresh.yml
+cloudflare-worker/         reverse proxy for dashboard.alvintola.com
 ```
 
 ## Notes
