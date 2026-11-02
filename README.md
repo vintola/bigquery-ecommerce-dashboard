@@ -5,6 +5,8 @@ A public, interactive retail analytics dashboard built from Google's
 dataset on BigQuery. It is the live sample linked from
 [alvintola.com](https://alvintola.com).
 
+**Live:** https://dashboard.alvintola.com/
+
 The point is the method: ingest a public source, define the KPIs, find the
 driver, and make the next decision obvious. No client data is used.
 
