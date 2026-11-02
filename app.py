@@ -85,14 +85,8 @@ start_index, end_index = st.sidebar.select_slider(
     value=(max(0, len(months) - 24), len(months) - 1),
     format_func=lambda index: month_labels[index],
 )
-selected_categories = st.sidebar.multiselect(
-    "Category",
-    options=category_options,
-    default=[],
-    placeholder="All categories",
-)
 st.sidebar.caption(
-    "Leave Category empty to include the full range. The customer order "
+    "The category filter lives in the Products & margin tab. Customer order "
     "distribution, traffic sources and inventory are lifetime/snapshot views."
 )
 st.sidebar.divider()
@@ -108,21 +102,14 @@ st.sidebar.markdown(
 )
 
 start, end = months[start_index], months[end_index]
-monthly_series = data.monthly_from_categories(
-    category_all, months[0], months[-1], selected_categories
-)
-monthly = data.filter_months(monthly_series, start, end)
+monthly = data.filter_months(monthly_all, start, end)
 mix = data.filter_months(mix_all, start, end)
-categories = data.aggregate_categories(
-    data.filter_months(category_all, start, end), selected_categories
-)
-products = data.aggregate_products(
-    data.filter_months(products_all, start, end), selected_categories
-)
-products = data.label_products(products)
+category_period = data.filter_months(category_all, start, end)
+categories = data.aggregate_categories(category_period)
+products_period = data.filter_months(products_all, start, end)
 
 current = data.kpis(monthly)
-previous = data.previous_period_kpis(monthly_series, start, end)
+previous = data.previous_period_kpis(monthly_all, start, end)
 has_previous = bool(previous) and previous.get("revenue", 0) > 0
 
 overview_tab, products_tab, customers_tab, inventory_tab, method_tab = st.tabs(
@@ -184,12 +171,7 @@ with overview_tab:
             config={"displayModeBar": False},
         )
     with right:
-        mix_title = (
-            "New vs returning customers (all categories)"
-            if selected_categories
-            else "New vs returning customers"
-        )
-        st.markdown(f"#### {mix_title}")
+        st.markdown("#### New vs returning customers")
         st.plotly_chart(
             charts.customer_mix(mix),
             width="stretch",
@@ -223,6 +205,17 @@ with products_tab:
         "Each dot is one of the 500 highest-revenue products. The quadrants split at the "
         "median revenue and median gross margin for the selected period. Size is units sold."
     )
+    selected_categories = st.multiselect(
+        "Filter products by category",
+        options=category_options,
+        default=[],
+        placeholder="All categories",
+        key="product_category_filter",
+    )
+    products = data.aggregate_products(products_period, selected_categories)
+    products = data.label_products(products)
+    filtered_categories = data.aggregate_categories(category_period, selected_categories)
+
     decision_counts = products["decision"].value_counts()
     decision_row = st.columns(4)
     for column, label in zip(
@@ -280,7 +273,7 @@ with products_tab:
         )
     with table_right:
         st.markdown("#### Category economics")
-        category_display = categories[
+        category_display = filtered_categories[
             [
                 "category",
                 "department",

@@ -39,6 +39,7 @@ CSS = f"""
     background: transparent;
   }}
   #MainMenu, footer {{ visibility: hidden; }}
+  [data-testid="stToolbar"], [data-testid="stDecoration"] {{ display: none; }}
 
   .dash-header {{
     border-bottom: 1px solid {LINE};

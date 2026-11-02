@@ -112,9 +112,11 @@ def monthly_from_categories(
     end: pd.Timestamp,
     categories: list[str] | None = None,
 ) -> pd.DataFrame:
-    """Rebuild monthly KPIs from the category extract so the category filter
-    also drives the overview. Distinct customer counts are not additive, so
-    they are omitted here; the overview does not use them.
+    """Rebuild monthly KPIs from the category extract.
+
+    Kept for ad-hoc analysis. The dashboard uses the monthly extract directly
+    because summing category-level order counts double-counts multi-category
+    orders.
     """
     data = filter_months(frame, start, end)
     if categories:
