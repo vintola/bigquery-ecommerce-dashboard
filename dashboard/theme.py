@@ -39,7 +39,28 @@ CSS = f"""
     background: transparent;
   }}
   #MainMenu, footer {{ visibility: hidden; }}
-  [data-testid="stToolbar"], [data-testid="stDecoration"] {{ display: none; }}
+  [data-testid="stToolbarActions"], [data-testid="stMainMenu"], [data-testid="stDecoration"] {{ display: none; }}
+  [data-testid="stExpandSidebarButton"] {{
+    display: inline-flex !important;
+    align-items: center;
+    gap: 0.35rem;
+    width: auto !important;
+    height: 2.2rem !important;
+    padding: 0 0.8rem !important;
+    background: {ACCENT} !important;
+    border-radius: 999px !important;
+  }}
+  [data-testid="stExpandSidebarButton"] span {{
+    color: {BG} !important;
+  }}
+  [data-testid="stExpandSidebarButton"]::after {{
+    content: "Filters";
+    font-family: {MONO};
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: {BG};
+  }}
 
   .dash-header {{
     border-bottom: 1px solid {LINE};
