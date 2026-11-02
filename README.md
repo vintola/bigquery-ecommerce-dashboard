@@ -133,10 +133,11 @@ enough for a portfolio sample.
 
 ## Deploy on Streamlit Community Cloud
 
-1. Push this repo to GitHub (private is fine — Community Cloud connects with a
-   read-only deploy key).
+1. This repo is public; Community Cloud reads it directly.
 2. Go to <https://share.streamlit.io> → **Create app** → select the repo,
-   branch `main`, main file `app.py`.
+   branch `main`, main file `app.py`. If the picker does not populate, use
+   **Paste GitHub URL** with
+   `https://github.com/vintola/bigquery-ecommerce-dashboard/blob/main/app.py`.
 3. Set the app subdomain to **`alvintola-retail-dashboard`**.
 4. Deploy. No secrets are required because the app reads `data/*.parquet`.
 
