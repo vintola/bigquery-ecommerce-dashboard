@@ -60,6 +60,26 @@ export default {
       return response;
     }
 
+    // Community Cloud returns a bare 400 on the raw path while the app is
+    // asleep. Fall back to the embed route, which serves the wake-up prompt
+    // instead of a blank error page.
+    if (response.status === 400) {
+      const wakeUrl = new URL("/", target);
+      wakeUrl.searchParams.set("embed", "true");
+      const wake = await fetch(wakeUrl, {
+        method: request.method,
+        headers,
+        redirect: "manual",
+      });
+      if (wake.status !== 400) {
+        return new Response(wake.body, {
+          status: wake.status,
+          statusText: wake.statusText,
+          headers: wake.headers,
+        });
+      }
+    }
+
     const responseHeaders = new Headers(response.headers);
     const location = responseHeaders.get("Location");
     if (location) {

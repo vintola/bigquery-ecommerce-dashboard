@@ -46,6 +46,8 @@ Streamlit app URL, for example:
   and breaks under a custom domain.
 - Streamlit's session cookies are host-only, so they are stored for
   `dashboard.alvintola.com` and forwarded to the app by the Worker.
+- If Streamlit Cloud has put the app to sleep, the raw path returns a bare 400.
+  The Worker falls back to `/?embed=true`, which serves the wake-up prompt.
 - If Streamlit changes its raw app path or auth flow, re-test
   `https://dashboard.alvintola.com/` and adjust `APP_PATH` or the redirect
   handling.
